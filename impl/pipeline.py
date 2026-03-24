@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 
-from safe2 import SafeTransformer
+from .safe import SafeTransformer
 
 
 class _ThreadMutingWriter:

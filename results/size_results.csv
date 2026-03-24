@@ -1,0 +1,16 @@
+Dataset,FCN,ResNet,Encoder,ROCKET,SAFE,GrowingNN
+Coffee,1,36,2,66,1,69,0,06,0,47,195584
+Computers,0,91,1,77,1,13,0,04,0,31,293888
+DiatomSizeReduction,0,33,0,65,0,42,0,02,0,12,804864
+DistalPhalanxOutlineAgeGroup,0,21,0,41,0,26,0,01,0,07,1295872
+DistalPhalanxTW,159,64,313,26,198,8,6,03,54,22,1660
+Earthquakes,171,53,336,57,213,6,6,48,58,26,1545
+ECG5000,0,7,1,38,0,87,0,03,0,24,379392
+GunPoint,1,74,3,41,2,17,0,07,0,59,152576
+MiddlePhalanxOutlineAgeGroup,31,88,62,56,39,7,1,21,10,83,8313
+MiddlePhalanxOutlineCorrect,137,6,269,99,171,34,5,2,46,73,1926
+OliveOil,1,06,2,08,1,32,0,04,0,36,250880
+Plane,0,45,0,88,0,56,0,02,0,16,593408
+Strawberry,0,56,1,1,0,7,0,03,0,19,476160
+ToeSegmentation2,1,14,2,22,1,41,0,05,0,39,234496
+,36,37,71,36,45,29,1,38,12,36,

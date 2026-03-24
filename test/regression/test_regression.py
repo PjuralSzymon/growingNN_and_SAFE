@@ -5,8 +5,14 @@ Regression tests: lock stable metrics (combo cardinality, stride math, split see
 from __future__ import annotations
 
 import hashlib
+import sys
+from pathlib import Path
 
 import numpy as np
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
 from impl.config import TRAIN_VAL_SPLIT_RANDOM_STATE, _word_extraction_stride, iter_embedding_param_combos
 from impl.pipeline import _split_train_val, _train_val_random_state
@@ -30,7 +36,7 @@ def test_word_extraction_stride_regression_table():
 
 def test_train_val_random_state_digest_regression():
     digest = hashlib.md5(f"BeetleFly:{TRAIN_VAL_SPLIT_RANDOM_STATE}".encode()).hexdigest()
-    assert digest[:8] == "8f3c2e1a" or _train_val_random_state("BeetleFly") == int(digest[:8], 16)
+    assert _train_val_random_state("BeetleFly") == int(digest[:8], 16)
 
 
 def test_stratified_split_sizes_regression():

@@ -3,14 +3,15 @@
 Self-contained module that implements the **SAFE + GrowingNN** method used in `growingnn_parameter_analysis_10.py`:
 
 1. **Embedding search** – For each run, try all combinations of SAFE embedding params (epochs, method, window_size, fasttext_max_ngram, doc2vec_dm). This step is **parallelized** when `n_workers` > 1: a **bounded pool** (queue) runs at most `n_workers` trainings at a time; when one finishes, the next combo is started. The training split is divided into train/validation (fraction from `run_single_experiment(..., train_val_split_fraction=...)` or `DEFAULT_TRAIN_VAL_SPLIT_FRACTION` in `config.py`); after all combos complete for one dataset, the best by **validation** accuracy is chosen. **Test** accuracy is reported on the held-out test set only (not used for selection).
-2. **SAFE** – Time series → SAX words → embedding (word2vec / fasttext / doc2vec / ppmi_svd) via `safe2.SafeTransformer`.
+2. **SAFE** – Time series → SAX words → embedding (word2vec / fasttext / doc2vec / ppmi_svd) via `impl.safe.SafeTransformer`.
 3. **GrowingNN** – Train on embedded vectors using `kerne.train_growingnn`.
 4. **Selection** – Keep the embedding configuration with **best validation accuracy**; return that result (including train, val, and test accuracies) and a per-attempt log.
 
 ## Dependencies
 
-- Run from the **repository root** so that `safe2` and `data_loader` are on the path.
-- **kerne** is duplicated inside this package as `SAFEgrowingNN.kerne`: it provides `LabelEncoder` (sklearn re-export) and `train_growingnn` (GrowingNN training). The external `growingnn` library must be available (path `D:/repos/growingnn` or set `GROWINGNN_PATH`).
+- **Python packages:** `pip install -r requirements.txt` (includes `growingnn` from PyPI, SAFE code under `impl/safe.py`, etc.).
+- **Optional:** set `GROWINGNN_PATH` to a local `growingnn` checkout to override the installed wheel while developing.
+- Run from the **repository root** so that `data_loader` and any extra scripts are on the path if you use them.
 
 ## API
 

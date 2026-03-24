@@ -1,0 +1,17 @@
+# impl/pipeline.py: numpy, pandas, sklearn
+# impl/kerne.py: growingnn, numpy, scikit-learn
+# impl/safe.py: saxpy, gensim, scipy, scikit-learn
+# numba: required at import time by growingnn (jit in structure.py); keep explicit.
+
+numpy>=1.20
+pandas>=1.3
+scipy>=1.7
+scikit-learn>=1.0
+saxpy>=1.0
+gensim>=4.0
+# growingnn: install from PyPI when available; otherwise: pip install -e /path/to/growingnn
+growingnn>=0.4.0
+numba>=0.56
+
+# Tests (run_tests.bat / pytest)
+pytest>=7.0

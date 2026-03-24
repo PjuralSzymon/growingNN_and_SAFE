@@ -12,18 +12,6 @@ _ROOT = Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-# pipeline imports safe2 at module load time; stub if not installed
-if "safe2" not in sys.modules:
-    _safe2 = types.ModuleType("safe2")
-
-    class SafeTransformer:  # noqa: D401
-        """Placeholder; unit/integration tests patch pipeline.SafeTransformer."""
-
-        pass
-
-    _safe2.SafeTransformer = SafeTransformer
-    sys.modules["safe2"] = _safe2
-
 # kerne imports growingnn at module load; provide a MagicMock module if import fails
 if "growingnn" not in sys.modules:
     try:

@@ -4,10 +4,16 @@ Integration tests: full run_single_experiment wiring with mocks (no real SAFE / 
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pytest
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
 from impl.pipeline import run_single_experiment
 
@@ -49,22 +55,17 @@ def _tiny_arrays(n_per_class=4, n_features=16):
         (20, "word2vec", 2, None, 0, 0.1),
     ],
 )
-def test_run_single_experiment_selects_best_val_acc(
-    _mock_iter, mock_safe_cls, mock_train, monkeypatch
-):
-    emb = np.random.default_rng(0).standard_normal((8, 4)).astype(np.float32)
+def test_run_single_experiment_selects_best_val_acc(_mock_iter, mock_safe_cls, mock_train):
+    rng = np.random.default_rng(0)
 
-    def _fit_on_train_and_test(self, x_tr, aux):
-        return None
-
-    def _transform(self, x):
+    def _transform(x):
         n = len(x)
-        return emb[:n]
+        return rng.standard_normal((n, 4)).astype(np.float32)
 
     mock_inst = MagicMock()
-    mock_inst.fit_on_train_and_test = _fit_on_train_and_test.__get__(mock_inst, MagicMock)
-    mock_inst.transform = _transform.__get__(mock_inst, MagicMock)
-    mock_inst.transform_with_word_augmentation = lambda xr, yr: (_transform(mock_inst, xr), yr)
+    mock_inst.fit_on_train_and_test = MagicMock(return_value=None)
+    mock_inst.transform.side_effect = _transform
+    mock_inst.transform_with_word_augmentation = lambda xr, yr: (_transform(xr), yr)
     mock_safe_cls.return_value = mock_inst
 
     mock_train.side_effect = [

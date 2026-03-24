@@ -1,0 +1,19 @@
+parameter,values,notes
+epochs,200,passed to GrowingNN base_params
+generations,8,
+hidden_size,512,
+batch_size,X,per-dataset when X; see per_dataset_meta_parameters.csv
+simulation_set_size,100,
+simulation_time,60,
+simulation_epochs,10,
+simulation_scheduler_type,progress_check,
+ACTIVATION_FUN,Sigmoid,
+convolution,false,
+learning_rate,X,per-dataset when X
+optimization_factor,1.0,
+augmentation_mode,none,no TimeSeriesAugmenter / no SAFE word augmentation
+SAFE_word_length,X,per-dataset when X
+SAFE_ALPHABET_SIZE,X,per-dataset when X
+SAFE_embedding_dim,X,per-dataset when X
+TRAIN_VAL_SPLIT_FRACTION,0.65,fraction of train pool for validation (embedding selection)
+STOPPER_TARGET_ACCURACY,0.94,GrowingNN AccuracyStopper target

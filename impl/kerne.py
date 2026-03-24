@@ -1,8 +1,8 @@
 """
 SAFEgrowingNN-internal kerne module: LabelEncoder and train_growingnn for GrowingNN training.
 
-Duplicated from the repo's kerne.py so that SAFEgrowingNN can work as a self-contained package.
-Depends on the external 'growingnn' package (path set below or via GROWINGNN_PATH).
+Install the `growingnn` dependency from PyPI (`pip install -r requirements.txt`).
+Optional: set `GROWINGNN_PATH` to a local checkout directory to override the installed package (development).
 """
 
 import os
@@ -14,26 +14,16 @@ import numpy as np
 # Re-export for pipeline.encode_labels and external use
 from sklearn.preprocessing import LabelEncoder
 
-# Ensure growingnn is on path (sibling repo or env)
-def _ensure_growingnn_path():
-    _base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    _candidates = [
-        os.environ.get("GROWINGNN_PATH"),
-        r"D:/repos/growingnn",
-        os.path.join(_base, "..", "growingnn"),
-        os.path.join(_base, "growingnn"),
-    ]
-    for p in _candidates:
-        if p and os.path.exists(p) and p not in sys.path:
-            sys.path.insert(0, p)
-            return
-    # last resort: append so import growingnn may still work if already on path
-    if r"D:/repos/growingnn" not in sys.path:
-        sys.path.append(r"D:/repos/growingnn")
+
+def _prepend_growingnn_override_path():
+    """If GROWINGNN_PATH is set, prepend it so a local checkout overrides site-packages."""
+    p = os.environ.get("GROWINGNN_PATH")
+    if p and os.path.isdir(p) and p not in sys.path:
+        sys.path.insert(0, p)
 
 
-_ensure_growingnn_path()
-import growingnn as gnn  # type: ignore[import-untyped]  # external repo, path set above
+_prepend_growingnn_override_path()
+import growingnn as gnn  # type: ignore[import-untyped]
 
 
 # ===================== Config (minimal for train_growingnn) =====================
