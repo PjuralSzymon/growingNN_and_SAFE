@@ -1,10 +1,3 @@
-"""
-Shared helpers for paper / adaptive experiment runners.
-
-Used by run_adaptive_experiments.py. The exhaustive paper runner may keep its own
-copies; this module is the canonical shared surface for new experiments.
-"""
-
 from __future__ import annotations
 
 import csv

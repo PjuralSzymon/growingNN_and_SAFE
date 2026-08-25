@@ -1,15 +1,3 @@
-"""
-Budgeted TPE-like embedding search over the full paper combo pool.
-
-- Full GrowingNN train per trial from this searcher's perspective (never mid-abort
-  the train call). GrowingNN itself may still early-stop via AccuracyStopper
-  (``STOPPER_TARGET_ACCURACY``) inside its own epoch/generation loop — that is
-  separate from ``target_tol`` below. See ``experiments/README_adaptive.md``.
-- Axis grades in [0, 1]; softmax probs update smoothly after each trial.
-- Never evaluates the same combo twice.
-- Meta-search stops at max_iters or when *finished-trial* test hits
-  paper_target - target_tol (does not interrupt GrowingNN mid-train).
-"""
 
 from __future__ import annotations
 

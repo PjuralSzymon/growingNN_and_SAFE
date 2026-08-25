@@ -5,7 +5,7 @@ __pycache__/
 *.so
 .Python
 
-# Downloaded UCR datasets (`python experiments/run_paper_experiments.py --list --download`)
+# Downloaded UCR datasets (`python experiments/run_experiments.py --list --download`)
 data/
 
 # New experiment runs (archived paper tables stay in results/)

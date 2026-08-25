@@ -1,4 +1,4 @@
-"""Visualization artifacts for adaptive embedding search."""
+"""Visualization for experiment search outputs."""
 
 from __future__ import annotations
 

@@ -1,3 +1,13 @@
+"""
+Run paper-suite experiments (budgeted embedding search + GrowingNN).
+
+Uses hyperparameters from ``results/``. Writes to ``results_adaptive/``.
+
+    python experiments/run_experiments.py --list --download
+    python experiments/run_experiments.py
+    python experiments/run_experiments.py --compare-only
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -113,7 +123,7 @@ def print_suite_status(datasets: tuple[str, ...], data_root: Path, output_csv: P
     for name in datasets:
         data_ok = locate_dataset(name, data_root) is not None
         logging.info(
-            "  %-32s data=%-3s adaptive=%s",
+            "  %-32s data=%-3s result=%s",
             name,
             "yes" if data_ok else "NO",
             "done" if name in done else "pending",
@@ -157,8 +167,7 @@ def run_one_dataset_adaptive(
 
     paper_target = paper_target_accuracy(dataset_name, archived)
     logging.info(
-        "Adaptive %s: train=%s val=%s test=%s | paper_target=%s tol=%s max_iters=%s | "
-        "GrowingNN stopper=%s (epochs=%s generations=%s are budgets)",
+        "Running %s: train=%s val=%s test=%s | paper_target=%s tol=%s max_iters=%s",
         dataset_name,
         x_tr_raw.shape,
         x_val_raw.shape,
@@ -166,9 +175,6 @@ def run_one_dataset_adaptive(
         paper_target,
         target_tol,
         max_iters,
-        stopper,
-        shared["epochs"],
-        shared["generations"],
     )
 
     word_length = meta["word_length"]
@@ -179,8 +185,6 @@ def run_one_dataset_adaptive(
     experiment_id = f"adaptive_{dataset_name}"
 
     def evaluate_fn(combo, iteration: int):
-        # ``stopper`` = GrowingNN AccuracyStopper (train-loop early exit).
-        # Meta-search early exit uses paper_target / target_tol after this returns.
         emb_idx = iteration - 1
         _idx, val_acc, _train_acc, result, combo_ret, log_row = _run_one_embedding(
             emb_idx,
@@ -237,7 +241,7 @@ def run_one_dataset_adaptive(
 
     row = result_row_from_best(dataset_name, shared, meta, search.best_row)
     logging.info(
-        "Adaptive done %s: stop=%s iters=%d seed=%s best_val=%s best_test=%s",
+        "Done %s: stop=%s iters=%d seed=%s best_val=%s best_test=%s",
         dataset_name,
         search.stop_reason,
         search.n_iters,
@@ -250,7 +254,7 @@ def run_one_dataset_adaptive(
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(
-        description="Budgeted adaptive SAFE + GrowingNN search (separate from exhaustive paper runner).",
+        description="Run paper-suite experiments (budgeted embedding search + GrowingNN).",
     )
     p.add_argument(
         "--data-root",
@@ -276,11 +280,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--target-tol",
         type=float,
         default=0.04,
-        help=(
-            "Meta-search only: after a finished trial, stop sampling more combos if "
-            "test >= paper_target - tol (default: 0.04). Does not stop GrowingNN mid-train; "
-            "that uses STOPPER_TARGET_ACCURACY from the paper grid. See README_adaptive.md."
-        ),
+        help="Stop searching more embeddings if test >= paper_target - tol (default: 0.04).",
     )
     p.add_argument(
         "--no-target-stop",
@@ -297,7 +297,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--n-workers",
         type=int,
         default=1,
-        help="Kept for CLI symmetry; adaptive search is sequential (default: 1).",
+        help="Workers (default: 1). Search is sequential so this is ignored if >1.",
     )
     p.add_argument("--download", action="store_true", help="Download missing UCR datasets.")
     p.add_argument("--no-download", action="store_true", help="Do not download missing datasets.")
@@ -307,7 +307,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default=True,
         help="Skip datasets already finished in --output (default: true).",
     )
-    p.add_argument("--compare-only", action="store_true", help="Only print paper vs archived vs adaptive CSV.")
+    p.add_argument("--compare-only", action="store_true", help="Only print paper vs archived vs this run CSV.")
     p.add_argument("--list", action="store_true", help="List datasets / readiness; optional --download.")
     p.add_argument("--dry-run", action="store_true", help="Print plan and exit.")
     return p.parse_args(argv)
@@ -331,10 +331,10 @@ def main(argv: list[str] | None = None) -> int:
 
     n_pool = len(list(iter_embedding_param_combos()))
     logging.info("Archived paper CSVs (read-only): %s", RESULTS_DIR)
-    logging.info("Adaptive run writes to: %s", results_dir)
+    logging.info("Writing results to: %s", results_dir)
     logging.info("Embedding pool size: %d | max_iters=%d n_init=%d target_tol=%s", n_pool, args.max_iters, args.n_init, args.target_tol)
     if args.n_workers != 1:
-        logging.warning("Adaptive search updates weights after each trial; using sequential evaluation (n_workers ignored).")
+        logging.warning("Search is sequential; n_workers > 1 is ignored.")
 
     if args.list:
         want_download = bool(args.download) and not args.no_download

@@ -1,1 +1,1 @@
-# Experiment runners package (paper + adaptive).
+# Experiment runners: run_experiments.py
