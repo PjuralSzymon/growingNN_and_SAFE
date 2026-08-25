@@ -13,5 +13,8 @@ gensim>=4.0
 growingnn>=0.4.0
 numba>=0.56
 
+# Adaptive experiment plots (experiments/adaptive_viz.py)
+matplotlib>=3.5
+
 # Tests (run_tests.bat / pytest)
 pytest>=7.0

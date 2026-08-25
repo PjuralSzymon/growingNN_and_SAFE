@@ -10,6 +10,7 @@ data/
 
 # New experiment runs (archived paper tables stay in results/)
 results_rerun/
+results_adaptive/
 
 model_output/
 
