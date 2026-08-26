@@ -4,3 +4,15 @@ __pycache__/
 *$py.class
 *.so
 .Python
+
+# Downloaded UCR datasets (`python experiments/run_experiments.py --list --download`)
+data/
+
+# New experiment runs (archived paper tables stay in results/)
+results_rerun/
+results_adaptive*/
+
+model_output/
+
+# Local notes / paper draft (not part of the public repo)
+info/

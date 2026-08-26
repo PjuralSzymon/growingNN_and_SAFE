@@ -39,6 +39,7 @@ DATASETS_SHIPPED = (
 def _find_ucr_data_dir(dataset_name: str) -> Path:
     base = Path(__file__).resolve().parent
     candidates = [
+        Path(__file__).resolve().parent.parent / "data" / dataset_name,
         base / "data" / dataset_name,
         base / dataset_name,
     ]
@@ -85,8 +86,8 @@ def main() -> None:
         type=str,
         default="Earthquakes",
         metavar="NAME",
-        help=f"UCR folder / file prefix under example/data/<NAME>/ (default: Earthquakes). "
-        f"Shipped in repo: {', '.join(DATASETS_SHIPPED)}.",
+        help=f"UCR folder / file prefix under data/<NAME>/ or example/data/<NAME>/ "
+        f"(default: Earthquakes). Shipped names: {', '.join(DATASETS_SHIPPED)}.",
     )
     parser.add_argument(
         "--full",
