@@ -236,7 +236,7 @@ def run_tpe_like_search(
     max_iters: int = 50,
     n_init: int = 5,
     paper_target: float | None = None,
-    target_tol: float = 0.04,
+    target_tol: float = 0.0,
     target_stop: bool = True,
     tau: float = 0.15,
     beta: float = 0.3,
@@ -342,14 +342,15 @@ def run_tpe_like_search(
             best_val,
         )
 
-        if target_stop and paper_target is not None and not np.isnan(test):
-            if test >= paper_target - target_tol:
+        if target_stop and paper_target is not None and not np.isnan(val):
+            if val >= paper_target - target_tol:
                 stop_reason = "target_hit"
                 logging.info(
-                    "  Target hit: test=%.4f >= paper_target=%.4f - tol=%.4f",
-                    test,
+                    "  Target hit: val=%.4f >= paper_target=%.4f - tol=%.4f (test=%.4f report only)",
+                    val,
                     paper_target,
                     target_tol,
+                    test,
                 )
                 break
 

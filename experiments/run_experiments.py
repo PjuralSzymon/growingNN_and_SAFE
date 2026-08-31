@@ -2,6 +2,8 @@
 Run paper-suite experiments (budgeted embedding search + GrowingNN).
 
 Uses hyperparameters from ``results/``. Writes to ``results_adaptive/``.
+Search stops when validation reaches the paper Table 1 level; reported
+comparison uses the chosen config's test accuracy.
 
     python experiments/run_experiments.py --list --download
     python experiments/run_experiments.py
@@ -279,13 +281,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument(
         "--target-tol",
         type=float,
-        default=0.04,
-        help="Stop searching more embeddings if test >= paper_target - tol (default: 0.04).",
+        default=0.0,
+        help=(
+            "Stop searching more embeddings when val >= paper_target - tol "
+            "(default: 0.0). Test is reported only for the chosen config."
+        ),
     )
     p.add_argument(
         "--no-target-stop",
         action="store_true",
-        help="Never stop early on paper target; always run max-iters (or pool exhaust).",
+        help="Never stop early on validation vs paper; always run max-iters (or pool exhaust).",
     )
     p.add_argument(
         "--sampler-seed",
