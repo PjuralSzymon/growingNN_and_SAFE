@@ -85,17 +85,32 @@ def plot_best_vs_iteration(
     path.parent.mkdir(parents=True, exist_ok=True)
     xs = [t.iteration for t in trials]
     best_val = [t.best_val_so_far for t in trials]
+    val_at = [t.accuracy_val for t in trials]
     test_at = [t.accuracy_test for t in trials]
 
     fig, ax = plt.subplots(figsize=(8, 4.5))
     ax.plot(xs, best_val, marker="o", linewidth=2, label="best val so far")
-    ax.plot(xs, test_at, marker="x", linewidth=1, alpha=0.7, label="this iter test")
+    ax.plot(xs, val_at, marker="s", linewidth=1, alpha=0.75, label="this iter val")
+    ax.plot(
+        xs,
+        test_at,
+        marker="x",
+        linewidth=1,
+        alpha=0.45,
+        label="this iter test (report only)",
+    )
     if paper_target is not None:
-        ax.axhline(paper_target, color="C3", linestyle="--", linewidth=1.5, label=f"paper target {paper_target:.3f}")
+        ax.axhline(
+            paper_target,
+            color="C3",
+            linestyle="--",
+            linewidth=1.5,
+            label=f"paper target (val stop) {paper_target:.3f}",
+        )
     ax.set_xlabel("iteration")
     ax.set_ylabel("accuracy")
     ax.set_ylim(0.0, 1.05)
-    ax.set_title(f"{dataset}: best validation vs iteration")
+    ax.set_title(f"{dataset}: best validation vs iteration (stop on val vs paper)")
     ax.legend(loc="lower right")
     ax.grid(True, alpha=0.3)
     fig.tight_layout()
